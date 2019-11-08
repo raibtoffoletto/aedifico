@@ -1,0 +1,46 @@
+<% include header %>
+  <div class="container">
+    <div class="alert alert-danger" role="alert" id="fileError">
+      <strong>Error :</strong> something went wrong...
+      <button type="button" class="close" data-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-success" role="alert" id="fileSaved">
+      <strong>Success :</strong> file saved.
+      <button type="button" class="close" data-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="table-responsive shadow">
+      <table class="table table-hover">
+        <thead class="bg-primary text-light">
+          <tr>
+            <th scope="col">Menu Items:</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="menu-items">
+        </tbody>
+      </table>
+    </div>
+    <br/>
+    <div class="table-responsive shadow">
+      <table class="table table-hover">
+        <thead class="bg-primary text-light">
+          <tr>
+            <th scope="col">Add new:</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="page-items">
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% include footer %>

@@ -1,0 +1,117 @@
+<!--
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+// Copyright (c) 2019 Raí B. Toffoletto (https://toffoletto.me)       //
+//                                                                    //
+// This program is free software; you can redistribute it and/or      //
+// modify it under the terms of the GNU General Public                //
+// License as published by the Free Software Foundation; either       //
+// version 2 of the License, or (at your option) any later version.   //
+//                                                                    //
+// This program is distributed in the hope that it will be useful,    //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of     //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  //
+// General Public License for more details.                           //
+//                                                                    //
+// You should have received a copy of the GNU General Public          //
+// License along with this program; if not, write to the              //
+// Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,   //
+// Boston, MA 02110-1301 USA                                          //
+//                                                                    //
+// Authored by: Raí B. Toffoletto <rai@toffoletto.me>                 //
+//                                                                    //
+////////////////////////////////////////////////////////////////////////
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>.: Sprintplank - Aedifico administration</title>
+    <style>
+      body, .box { margin: 0; height: 100vh; overflow: hidden; }
+      .box {
+        background: #4e73df;
+        padding: 6em 0;
+        text-align: center;
+        color: white;
+      }
+      .box h2 {
+        font-weight: 100;
+        font-size: 30px;
+      }
+      .login {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+      }
+      .login input {
+        width: 100%;
+        background: transparent;
+        border: 0;
+        border-bottom: 2px solid;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 300;
+        line-height: 1.5;
+        color: inherit;
+        outline: none;
+      }
+      .login button {
+        all: unset;
+        margin-top: 2.4em;
+        background: transparent;
+        border: 2px solid white;
+        padding: 1em 4em;
+        border-radius: 50px;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: 700;
+        position: relative;
+        transition: all 0.3s;
+        overflow: hidden;
+        z-index: 1;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+.login button:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10rem;
+  z-index: -2;
+}
+.login button:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #00000022;
+  transition: all .3s;
+  border-radius: 10rem;
+  z-index: -1;
+}
+.login button:hover {
+  color: #fff;
+}
+.login button:hover:before {
+  width: 100%;
+}
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <form action="/login" method="post" class="login">
+        <input type="password" name="password" required="required" />
+        <button type="submit">
+          <span>SIGN IN</span>
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

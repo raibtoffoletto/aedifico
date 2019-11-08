@@ -1,0 +1,52 @@
+<% include header %>
+  <div class="container">
+    <div class="alert alert-danger" role="alert" id="fileError">
+      <strong>Error :</strong> something went wrong...
+      <button type="button" class="close" data-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-success" role="alert" id="fileSaved">
+      <strong>Success :</strong> file saved.
+      <button type="button" class="close" data-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="container">
+    <form id="fileForm">
+      <% if (markdown_editor) { %>
+        <div class="row">
+          <div class="form-group col">
+            <label for="fileTitle">Title:</label>
+            <input type="text" class="form-control" name="fileTitle" id="fileTitle" />
+          </div>
+          <div class="form-group col">
+            <label for="fileDate">Date:</label>
+            <input type="date" class="form-control" name="fileDate" id="fileDate" />
+          </div>
+          <div class="form-group col">
+            <label class="d-block">&nbsp;⠀⠀⠀⠀⠀⠀&nbsp;</label>
+            <button type="submit" class="btn btn-primary" id="fileFormSave">Save</button>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="row">
+          <div class="form-group col">
+            File: <span id="fileName"></span>
+          </div>
+          <div class="form-group col">
+            Modified: <span id="fileDate"></span>
+          </div>
+          <div class="form-group col text-right">
+            <button type="button" class="btn btn-danger" id="fileDelete">Delete File</button>
+            <button type="submit" class="btn btn-primary" id="fileFormSave">Save</button>
+          </div>
+        </div>
+      <% } %>
+      <div class="form-group">
+        <textarea name="fileContent" class="form-control" id="fileContent"></textarea>
+      </div>
+    </form>
+  </div>
+<% include footer %>
