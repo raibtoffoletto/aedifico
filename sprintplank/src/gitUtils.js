@@ -61,6 +61,8 @@ var checkRepo = function () {
             resolve ();
         }
     }).then (function () {
+        return gitRemoteUpdate ();
+    }).then (function () {
         return git.Repository.open (repo_path);
     }).then (function (repo) {
         repository = repo;
@@ -248,6 +250,7 @@ var gitPushPreview = function () {
 
         proc.on ('exit', function (exit_code) {
             if (exit_code === 0) {
+                checkRepo ();
                 resolve ();
             } else {
                 reject ('Failed to push to remote.');
@@ -263,10 +266,27 @@ var gitPushMaster = function () {
 
         proc.on ('exit', function (exit_code) {
             if (exit_code === 0) {
+                checkRepo ();
+                console.log ('Pushed to master');
                 resolve ();
-                console.log ('pushed to master');
             } else {
                 reject ('Failed to push to remote.');
+            }
+        });
+    });
+};
+
+var gitRemoteUpdate = function () {
+    return new Promise (function (resolve, reject) {
+        let error_message;
+        let proc = spawn ('git', ['-C',repo_path,'remote','update']);
+
+        proc.on ('exit', function (exit_code) {
+            if (exit_code === 0) {
+                resolve ();
+                console.log ('Remote updated');
+            } else {
+                reject ('Failed to update remote.');
             }
         });
     });
