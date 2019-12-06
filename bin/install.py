@@ -22,7 +22,7 @@
 #                                                                   #
 #####################################################################
 
-import os, sys, time, subprocess, shutil
+import os, sys, time, subprocess, shutil, socket
 from pathlib import Path
 from getpass import getpass
 
@@ -145,14 +145,22 @@ if base_path.joinpath ('.gitignore').exists ():
     base_path.joinpath ('.gitignore').unlink ()
 
 # Credentials
+user_gitconfig = Path (os.path.expanduser ('~' + os.environ['SUDO_USER'])).joinpath ('.gitconfig')
+
 if base_path.joinpath ('./sprintplank/git.json').exists ():
     base_path.joinpath ('./sprintplank/git.json').unlink ()
+if user_gitconfig.exists ():
+    user_gitconfig.unlink ()
+
 print ('\n\n Configuring git signature')
 git_name = input ('       Name : ')
 git_email = input ('     E-mail : ')
 git_file = open (base_path.joinpath ('./sprintplank/git.json'), 'w')
 git_file.write ('{\"name\":\"' + git_name + '\",\"email\":\"' + git_email + '\"}')
 git_file.close ()
+git_configfile = open (user_gitconfig, 'w')
+git_configfile.write ('[user]\n    user.name = ' + git_name + '\n    user.email = ' + git_email + '\n')
+git_configfile.close ()
 
 if base_path.joinpath ('./sprintplank/credentials.json').exists ():
     base_path.joinpath ('./sprintplank/credentials.json').unlink ()
@@ -281,13 +289,13 @@ loading_cmd ('Starting systemd aedifico-sprintplank.service', preview_start)
 
 print (' Setting sudo priviledges for user ' + os.environ['SUDO_USER'])
 sudoers_file = open (Path ('/etc/sudoers'), 'a')
-sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ALL=(ALL) NOPASSWD: ALL\n')
+sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ' + socket.gethostname() + '=(root) NOPASSWD: /bin/systemctl\n')
 sudoers_file.close ()
 
 if certs == 'letsencrypt':
     certbot_file = open (Path ('/etc/systemd/system/certbot-renewal.service'), 'w')
     certbot_file.write ('[Unit]\nDescription=Certbot Renewal\n\n[Service]\nType=oneshot\n')
-    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone ')
+    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone --config-dir ' + base_path.joinpath ('./bin/certs'))
     certbot_file.write ('--pre-hook "systemctl stop aedifico.service" ')
     certbot_file.write ('--post-hook "systemctl start aedifico.service" ')
     certbot_file.write ('--quiet\n')
