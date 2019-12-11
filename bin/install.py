@@ -202,6 +202,7 @@ git_preview = subprocess.Popen (['git', '--work-tree=' + str (base_path.joinpath
                                 git_repo, 'checkout', '-f', 'preview'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Website Git: Checking out preview', git_preview)
 
+os.chown (user_gitconfig, user_uid, user_gid)
 for root, dirs, files in os.walk (base_path):
     for base_dir in dirs:
         os.chown (os.path.join (root, base_dir), user_uid, user_gid)
