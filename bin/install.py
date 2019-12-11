@@ -140,7 +140,7 @@ apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-prope
 loading_cmd ('Installing dependencies', apt_install)
 
 # Install npm packages
-npm_install = subprocess.Popen (['npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+npm_install = subprocess.Popen (['sudo', 'npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing npm packages', npm_install)
 
 # Removes the .git directory
@@ -159,7 +159,7 @@ if base_path.joinpath ('./sprintplank/git.json').exists ():
 if user_gitconfig.exists ():
     user_gitconfig.unlink ()
 
-print ('\n\n Configuring git signature')
+print (' Configuring git signature')
 git_name = input ('       Name : ')
 git_email = input ('     E-mail : ')
 git_file = open (base_path.joinpath ('./sprintplank/git.json'), 'w')
