@@ -136,20 +136,14 @@ loading_cmd ('Adding NodeJS repository for Debian/Ubuntu', bash_node)
 
 # Install necessary packages
 apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
-                                'redis-server', 'nodejs'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing dependencies', apt_install)
+node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=8.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+loading_cmd ('Installing NodeJS v8.x', node_install)
 
 # Install npm packages
-npm_install = subprocess.Popen (['sudo', 'npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+npm_install = subprocess.Popen (['npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing npm packages', npm_install)
-
-# Workaround for ARM architecture
-#import platform
-#platform.machine()=> 'x86_64'
-#npm rebuild node-sass
-if platform.machine () != 'x86_64':
-    arm_fix = subprocess.Popen (['sudo', 'npm', 'rebuild', 'node-sass'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    loading_cmd ('Fixing ARM install', arm_fix)
 
 # Removes the .git directory
 print (' Cleaning up git.')
