@@ -22,7 +22,7 @@
 #                                                                   #
 #####################################################################
 
-import os, sys, time, subprocess, shutil
+import os, sys, time, subprocess, shutil, socket, platform
 from pathlib import Path
 from getpass import getpass
 
@@ -127,10 +127,19 @@ apt_upgrade = subprocess.Popen (['apt', 'full-upgrade', '-y'], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Upgrading your system', apt_upgrade)
 
+# Add NodeJS v12 repository
+curl_node = subprocess.Popen (['curl', '-sL', 'https://deb.nodesource.com/setup_8.x'], stdout=subprocess.PIPE, \
+                                stderr=subprocess.PIPE)
+bash_node = subprocess.Popen (['bash'], stdin=curl_node.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+curl_node.stdout.close ()
+loading_cmd ('Adding NodeJS repository for Debian/Ubuntu', bash_node)
+
 # Install necessary packages
-apt_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs', 'npm', 'ufw', 'certbot', 'redis-server'], \
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
+                                'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing dependencies', apt_install)
+node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=8.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+loading_cmd ('Installing NodeJS v8.x', node_install)
 
 # Install npm packages
 npm_install = subprocess.Popen (['npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -145,14 +154,22 @@ if base_path.joinpath ('.gitignore').exists ():
     base_path.joinpath ('.gitignore').unlink ()
 
 # Credentials
+user_gitconfig = Path (os.path.expanduser ('~' + os.environ['SUDO_USER'])).joinpath ('.gitconfig')
+
 if base_path.joinpath ('./sprintplank/git.json').exists ():
     base_path.joinpath ('./sprintplank/git.json').unlink ()
-print ('\n\n Configuring git signature')
+if user_gitconfig.exists ():
+    user_gitconfig.unlink ()
+
+print (' Configuring git signature')
 git_name = input ('       Name : ')
 git_email = input ('     E-mail : ')
 git_file = open (base_path.joinpath ('./sprintplank/git.json'), 'w')
 git_file.write ('{\"name\":\"' + git_name + '\",\"email\":\"' + git_email + '\"}')
 git_file.close ()
+git_configfile = open (user_gitconfig, 'w')
+git_configfile.write ('[user]\n    user.name = ' + git_name + '\n    user.email = ' + git_email + '\n')
+git_configfile.close ()
 
 if base_path.joinpath ('./sprintplank/credentials.json').exists ():
     base_path.joinpath ('./sprintplank/credentials.json').unlink ()
@@ -179,6 +196,7 @@ git_preview = subprocess.Popen (['git', '--work-tree=' + str (base_path.joinpath
                                 git_repo, 'checkout', '-f', 'preview'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Website Git: Checking out preview', git_preview)
 
+os.chown (user_gitconfig, user_uid, user_gid)
 for root, dirs, files in os.walk (base_path):
     for base_dir in dirs:
         os.chown (os.path.join (root, base_dir), user_uid, user_gid)
@@ -281,13 +299,13 @@ loading_cmd ('Starting systemd aedifico-sprintplank.service', preview_start)
 
 print (' Setting sudo priviledges for user ' + os.environ['SUDO_USER'])
 sudoers_file = open (Path ('/etc/sudoers'), 'a')
-sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ALL=(ALL) NOPASSWD: ALL\n')
+sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ' + socket.gethostname() + '=(root) NOPASSWD: /bin/systemctl\n')
 sudoers_file.close ()
 
 if certs == 'letsencrypt':
     certbot_file = open (Path ('/etc/systemd/system/certbot-renewal.service'), 'w')
     certbot_file.write ('[Unit]\nDescription=Certbot Renewal\n\n[Service]\nType=oneshot\n')
-    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone ')
+    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone --config-dir ' + base_path.joinpath ('./bin/certs'))
     certbot_file.write ('--pre-hook "systemctl stop aedifico.service" ')
     certbot_file.write ('--post-hook "systemctl start aedifico.service" ')
     certbot_file.write ('--quiet\n')

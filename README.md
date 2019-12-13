@@ -29,6 +29,40 @@
 >
 > It includes a minimal template with a micro-blogging infrastructure. The website can be deployed via Git or via the included CMS.
 
+# Dependencies and Requirements:
+An up and running instance of Ubuntu or Debian server (only x86 architecture at the moment) with secure shell access (SSH) and (*optionally*) domains and DNS records configured. Ports 80, 443, 2083 and 3000 must **not** be in use by any other software. Also, the following packages are required (*and they are usually already installed*):
+
+- git
+- python3
+- systemd
+
+*Note:* This server do **not** run at `/var/www`, it is good practice to have a dedicated user account set up for it, without direct ssh access (specially if you are running other services in your server). **sudo** privileges will be configured during the install.
+
+### Install:
+Clone the repository:
+
+`$ git clone https://github.com/raibtoffoletto/aedifico.git`
+
+Execute the installer and *carefully follow its instructions*:
+
+`$ cd aedifico/bin`
+`$ sudo python3 install.py`
+
+### Uninstall:
+In the `aedifico/bin` folder, run:
+
+`$ sudo python install.py --uninstall`
+
+### Services:
+These are the following *systemd* services in use:
+
+- aedifico.service
+- aedifico-preview.service
+- aedifico-sprintplank.service
+
+You can check the status of each of them with `systemctl status $SERVICE` and the logs with `journalctl -u $SERVICE`.
+
+*Tip:* To monitor live the status of a service use the program `watch`.
 
 ## Deploying your Website:
 
@@ -46,41 +80,6 @@ Clone, modify and than push to the git repository `preview.git`.
 Use primarily the branch `preview`, you can check all modifications at the port 3000. Any commits to the branch `master` will go directly to production, it is wise to use `preview` to test new content and then merge the branches.
 
 *Note:* Commits to other branches won't affect the website, you may use them as back-ups/archives.
-
-# Dependencies and Requirements:
-An up and running instance of Ubuntu or Debian server with secure shell access (SSH) and (*optionally*) domains and DNS records configured. Ports 80, 443, 2083 and 3000 must **not** be in use by any other software. Also, the following packages are required (*and they are usually already installed*):
-
-- git
-- python3
-- systemd
-
-*Note:* This server do **not** run at `/var/www`, it is good practice to have a dedicated user account set up for it, without direct ssh access (specially if you are running other services in your server). **sudo** privileges will be configured during the install.
-
-### Install:
-Clone the repository:
-
-`$ git clone https://github.com/raibtoffoletto/aedifico.git`
-
-Execute the installer and *carefully follow its instructions*:
-
-`$ cd aedifico/bin`
-`$ sudo python install.py`
-
-### Uninstall:
-In the `aedifico/bin` folder, run:
-
-`$ sudo python install.py --uninstall`
-
-### Services:
-These are the following *systemd* services in use:
-
-- aedifico.service
-- aedifico-preview.service
-- aedifico-sprintplank.service
-
-You can check the status of each of them with `systemctl status $SERVICE` and the logs with `journalctl -u $SERVICE`.
-
-*Tip:* To monitor live the status of a service use the program `watch`.
 
 # Acknowledgement:
 **Aedifico** is build using several awesome projects.
