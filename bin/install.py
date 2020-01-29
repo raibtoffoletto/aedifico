@@ -56,6 +56,9 @@ if os.geteuid () != 0 :
     print ("\n This script needs `sudo` privileges!\n")
     sys.exit (0)
 
+user_uid = int (os.environ['SUDO_UID'])
+user_gid = int (os.environ['SUDO_GID'])
+
 # Check for path compatibility
 base_path = Path.cwd ().parent
 if base_path.name != 'aedifico' :
@@ -128,7 +131,7 @@ apt_upgrade = subprocess.Popen (['apt', 'full-upgrade', '-y'], \
 loading_cmd ('Upgrading your system', apt_upgrade)
 
 # Add NodeJS v12 repository
-curl_node = subprocess.Popen (['curl', '-sL', 'https://deb.nodesource.com/setup_8.x'], stdout=subprocess.PIPE, \
+curl_node = subprocess.Popen (['curl', '-sL', 'https://deb.nodesource.com/setup_12.x'], stdout=subprocess.PIPE, \
                                 stderr=subprocess.PIPE)
 bash_node = subprocess.Popen (['bash'], stdin=curl_node.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 curl_node.stdout.close ()
@@ -138,8 +141,8 @@ loading_cmd ('Adding NodeJS repository for Debian/Ubuntu', bash_node)
 apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
                                 'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing dependencies', apt_install)
-node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=8.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-loading_cmd ('Installing NodeJS v8.x', node_install)
+node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=12.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+loading_cmd ('Installing NodeJS v12.x', node_install)
 
 # Install npm packages
 npm_install = subprocess.Popen (['npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -170,6 +173,8 @@ git_file.close ()
 git_configfile = open (user_gitconfig, 'w')
 git_configfile.write ('[user]\n    user.name = ' + git_name + '\n    user.email = ' + git_email + '\n')
 git_configfile.close ()
+os.chmod (user_gitconfig, 0o644)
+os.chown (user_gitconfig, user_uid, user_gid)
 
 if base_path.joinpath ('./sprintplank/credentials.json').exists ():
     base_path.joinpath ('./sprintplank/credentials.json').unlink ()
@@ -181,8 +186,6 @@ os.chmod (base_path.joinpath ('./sprintplank/credentials.json'), 0o400)
 
 # Check out git
 git_repo = str (base_path.joinpath ('preview.git'))
-user_uid = int (os.environ['SUDO_UID'])
-user_gid = int (os.environ['SUDO_GID'])
 
 if base_path.joinpath ('preview').exists ():
     shutil.rmtree (base_path.joinpath ('preview'))
@@ -328,7 +331,7 @@ if certs == 'letsencrypt':
 
 # Firewall
 print ('\n\n Configuring your firewall . . .')
-ssh_port = input ('    What\'s your SSH port? [22] ')
+ssh_port = input ('    What\'s your SSH port? [ex: 22] ')
 ufw_ssh = subprocess.Popen (['ufw', 'allow', ssh_port], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 ufw_ssh.wait ()
 ufw_80 = subprocess.Popen (['ufw', 'allow', '80'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

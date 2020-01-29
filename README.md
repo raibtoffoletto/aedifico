@@ -36,7 +36,7 @@ An up and running instance of Ubuntu or Debian server (only x86 architecture at 
 - python3
 - systemd
 
-*Note:* This server do **not** run at `/var/www`, it is good practice to have a dedicated user account set up for it, without direct ssh access (specially if you are running other services in your server). **sudo** privileges will be configured during the install.
+*Note:* This server do **not** run at `/var/www`, it is good practice to have a dedicated user account set up for it without direct ssh access (specially if you are running other services in your server). **sudo** privileges are required for the install.
 
 ### Install:
 Clone the repository:
@@ -82,7 +82,7 @@ Use primarily the branch `preview`, you can check all modifications at the port 
 *Note:* Commits to other branches won't affect the website, you may use them as back-ups/archives.
 
 # Acknowledgement:
-**Aedifico** is build using several awesome projects.
+**Aedifico** is built using several awesome projects.
 My heartfelt thanks to:
 
 - [Bootstrap](https://getbootstrap.com)
