@@ -130,17 +130,20 @@ apt_upgrade = subprocess.Popen (['apt', 'full-upgrade', '-y'], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Upgrading your system', apt_upgrade)
 
+# Install necessary packages
+apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
+                                'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+loading_cmd ('Installing dependencies', apt_install)
+
 # Add NodeJS v12 repository
 curl_node = subprocess.Popen (['curl', '-sL', 'https://deb.nodesource.com/setup_12.x'], stdout=subprocess.PIPE, \
                                 stderr=subprocess.PIPE)
 bash_node = subprocess.Popen (['bash'], stdin=curl_node.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 curl_node.stdout.close ()
 loading_cmd ('Adding NodeJS repository for Debian/Ubuntu', bash_node)
-
-# Install necessary packages
-apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
-                                'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-loading_cmd ('Installing dependencies', apt_install)
+apt_update = subprocess.Popen (['apt', 'update'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+loading_cmd ('Updating your system', apt_update)
+time.sleep (5)
 node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=12.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing NodeJS v12.x', node_install)
 
