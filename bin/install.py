@@ -50,6 +50,14 @@ def certs_ask ():
         user_input = input (message)
     return user_input.lower ().strip ()
 
+def get_password ():
+    passwd = getpass ('\n Create an administrative password: ')
+    passwd_check = getpass ('\n                  Confirm password: ')
+    while not passwd == passwd_check:
+        get_password ()
+    return passwd
+
+
 #####################################################################
 # Check for privileges
 if os.geteuid () != 0 :
@@ -181,7 +189,7 @@ os.chown (user_gitconfig, user_uid, user_gid)
 
 if base_path.joinpath ('./sprintplank/credentials.json').exists ():
     base_path.joinpath ('./sprintplank/credentials.json').unlink ()
-sprintplank_password = getpass ('\n Create an administrative password: ')
+sprintplank_password = get_password ()
 create_credentials = subprocess.Popen (['node', '../sprintplank/sprintplankPassport.js', 'create', \
                                         sprintplank_password], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Creating credentials', create_credentials)
@@ -255,7 +263,7 @@ ssl_file.close ()
 os.chmod (base_path.joinpath ('./bin/ssl_config.js'), 0o600)
 
 # SystemD services
-print (' Creating SystemD services . . .')
+print (' Creating Systemd services . . .')
 os.chmod (base_path.joinpath ('./bin/www'), 0o755)
 os.chmod (base_path.joinpath ('./bin/preview'), 0o755)
 os.chmod (base_path.joinpath ('./sprintplank/sprintplank'), 0o755)
