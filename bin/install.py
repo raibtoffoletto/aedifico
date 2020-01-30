@@ -51,12 +51,15 @@ def certs_ask ():
     return user_input.lower ().strip ()
 
 def get_password ():
-    passwd = getpass ('\n Create an administrative password: ')
-    passwd_check = getpass ('\n                  Confirm password: ')
-    while not passwd == passwd_check:
-        get_password ()
+    passwd_same = False
+    while passwd_same != True:
+        passwd = getpass ('\n Create an administrative password: ')
+        passwd_check = getpass ('                  Confirm password: ')
+        if passwd != passwd_check:
+            print(' Passwords didn\'t mach, try again...')
+        else:
+            passwd_same = True
     return passwd
-
 
 #####################################################################
 # Check for privileges
