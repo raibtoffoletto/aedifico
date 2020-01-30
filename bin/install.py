@@ -263,7 +263,10 @@ ssl_file.write ("')),\n    cert: fs.readFileSync (path.resolve (__dirname, '")
 ssl_file.write (ssl_csr)
 ssl_file.write ("'))\n}\n")
 ssl_file.close ()
+os.chown (base_path.joinpath ('./bin/ssl_config.js'), user_uid, user_gid)
 os.chmod (base_path.joinpath ('./bin/ssl_config.js'), 0o600)
+os.chmod (base_path.joinpath ('./bin', ssl_key), 0o644)
+os.chmod (base_path.joinpath ('./bin', ssl_csr), 0o644)
 
 # SystemD services
 print (' Creating Systemd services . . .')
