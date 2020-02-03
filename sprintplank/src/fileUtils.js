@@ -233,6 +233,7 @@ var createNewFile = function (folder, name, raw = false) {
                         "\ndate: " + date_now.getFullYear () + "-" +
                                     (date_now.getMonth () + 1) + "-" +
                                     date_now.getDate () +
+                        "\ntags:" +
                         "\n---";
     }
 

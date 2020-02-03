@@ -38,7 +38,7 @@ def loading_cmd (message,waiting_cmd):
         print ('\n Error while running command:')
         print (waiting_cmd.stderr.read ().decode ())
         sys.exit (1)
-    sys.stdout.write ('\r ' + message + ', ok!\n')
+    sys.stdout.write ('\r ' + message + ', done!\n')
 
 def certs_ask ():
     answers = ['letsencrypt', 'openssl']
