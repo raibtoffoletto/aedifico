@@ -26,6 +26,7 @@ var getFile = function (file_path, raw = false) {
         let fm_file = fm (fs.readFileSync (file_path, 'utf8'));
         this.title = fm_file.attributes.title;
         this.date = new Date (fm_file.attributes.date);
+        this.tags = fm_file.attributes.tags;
         this.content = fm_file.body;
     } else {
         this.name = path.basename (file_path);
@@ -254,7 +255,7 @@ var createNewFile = function (folder, name, raw = false) {
     }
 };
 
-var updateFile = function (file,  content, markdown = false, title = "", date = "") {
+var updateFile = function (file,  content, markdown = false, title = "", date = "", tags = "") {
     let updated_date = new Date (date);
     let updated_content = content;
 
@@ -264,6 +265,7 @@ var updateFile = function (file,  content, markdown = false, title = "", date = 
             "\ndate: " + updated_date.getFullYear () + "-" +
                         (updated_date.getMonth () + 1) + "-" +
                         updated_date.getDate () +
+            "\ntags: " + tags +
             "\n---\n" + content;
     }
 

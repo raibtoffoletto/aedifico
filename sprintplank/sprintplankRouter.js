@@ -327,7 +327,8 @@ router.post (/^\/save[\/]?$/, (req, res) => {
                                                 req.body.content,
                                                 true,
                                                 req.body.title,
-                                                req.body.date);
+                                                req.body.date,
+                                                req.body.tags);
         } else {
             update_file = fileUtils.updateFile (req.body.file,
                                                 req.body.content);

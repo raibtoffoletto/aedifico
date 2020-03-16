@@ -38,6 +38,7 @@
             if (markdown_editor) {
               $('#fileTitle').val (file_data.title);
               $('#fileDate').val (fileDate)
+              $('#fileTags').val (file_data.tags);
 
               if (!(modify_date)) {
                 $('#fileDate').attr ('disabled', 'disabled');
@@ -80,6 +81,7 @@
               if (markdown_editor) {
                 savedFile.title = $('#fileTitle').val ();
                 savedFile.date = $('#fileDate').val ();
+                savedFile.tags = $('#fileTags').val ();
               }
 
               $.post ('/save', savedFile, function (dt, st) {
