@@ -46,6 +46,7 @@ Clone the repository:
 Execute the installer and *carefully follow its instructions*:
 
 `$ cd aedifico/bin`
+
 `$ sudo python3 install.py`
 
 ### Uninstall:
