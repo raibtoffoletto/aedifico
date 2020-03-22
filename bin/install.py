@@ -262,8 +262,10 @@ elif certs == 'openssl':
     openssl_cn = ask_question ('    Common Name * [ex: example.com] : ', ['example.com'])
     openssl_credentials = '"/C='+openssl_c+'/ST='+openssl_st+'/L='+openssl_l+'/O='+openssl_o \
                             +'/OU='+openssl_ou+'/CN='+openssl_cn+'"'
-    openssl_args = ['openssl', 'req', '-nodes', '-x509', '-newkey', 'rsa:4096', '-keyout', 'certs/openssl.key', \
-                    '-out', 'certs/openssl.csr', '-days', '365', '-subj', openssl_credentials]
+
+    openssl_args = ['openssl', 'req', '-newkey', 'rsa:4096', '-nodes', '-keyout certs/openssl.key', '-x509', \
+                    '-days 365', '-out certs/openssl.csr', '-subj', openssl_credentials]
+
     openssl_cmd = subprocess.Popen (openssl_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     loading_cmd ('   Creating an openssl certificate', openssl_cmd)
     ssl_key = './certs/openssl.key'
