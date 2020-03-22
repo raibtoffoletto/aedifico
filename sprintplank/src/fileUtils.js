@@ -238,6 +238,12 @@ var createNewFile = function (folder, name, raw = false) {
                         "\n---";
     }
 
+    if (!fs.existsSync (folder)) {
+        fs.mkdir(folder, {recursive: true}, (err) => {
+            if (err) throw err;
+        });
+    }
+
     do {
         new_file_path = (i == 0) ? path.join (folder + '/' + sanitize (name) + extension) :
                                 path.join (folder + '/' + sanitize (name) + '-' + i + extension);

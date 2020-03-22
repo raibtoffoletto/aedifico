@@ -145,10 +145,16 @@ router.get (/^\/posts[\/]?$/, function (req, res, next) {
 
         res.render ('edit-file', edit_post_metadata);
     } else {
+        let date_new_path = new Date ();
+        let date_new_month = date_new_path.getMonth () + 1;
+        let date_new_path_month = (date_new_month <= 9) ? '0' + date_new_month : date_new_month;
         let post_metadata = new defaultMetadata ();
             post_metadata.path = ['~', 'content', 'posts'];
             post_metadata.showSearch = true;
             post_metadata.posts = fileUtils.getPosts ();
+            post_metadata.new_path = post_metadata.posts.path +
+                                    '/' + date_new_path.getFullYear () +
+                                    '/' + date_new_path_month;
 
         res.render ('list-posts', post_metadata);
     }
