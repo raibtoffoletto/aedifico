@@ -260,11 +260,11 @@ elif certs == 'openssl':
     openssl_o = ask_question ('    Organization [ex: Security, Inc] : ', ['Security, Inc'])
     openssl_ou = ask_question ('    Organizational Unit [ex: IT Department] : ', ['IT Department'])
     openssl_cn = ask_question ('    Common Name * [ex: example.com] : ', ['example.com'])
-    openssl_credentials = '"/C='+openssl_c+'/ST='+openssl_st+'/L='+openssl_l+'/O='+openssl_o \
-                            +'/OU='+openssl_ou+'/CN='+openssl_cn+'"'
+    openssl_credentials = '/C='+openssl_c+'/ST='+openssl_st+'/L='+openssl_l+'/O='+openssl_o \
+                            +'/OU='+openssl_ou+'/CN='+openssl_cn
 
-    openssl_args = ['openssl', 'req', '-newkey', 'rsa:4096', '-nodes', '-keyout certs/openssl.key', '-x509', \
-                    '-days 365', '-out certs/openssl.csr', '-subj', openssl_credentials]
+    openssl_args = ['openssl', 'req', '-newkey', 'rsa:4096', '-nodes', '-keyout', 'certs/openssl.key', '-x509', \
+                    '-days', '365', '-out', 'certs/openssl.csr', '-subj', openssl_credentials]
 
     openssl_cmd = subprocess.Popen (openssl_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     loading_cmd ('   Creating an openssl certificate', openssl_cmd)
