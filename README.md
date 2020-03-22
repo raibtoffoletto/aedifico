@@ -25,7 +25,7 @@
 
 # Aedifico
 
-> This is a small framework that uses Node's ExpressJS and EJS to render simple websites.
+> This is a small framework that uses Node's ExpressJS and EJS to render simple websites written in [Markdown](https://www.markdownguide.org/).
 >
 > It includes a minimal template with a micro-blogging infrastructure. The website can be deployed via Git or via the included CMS.
 

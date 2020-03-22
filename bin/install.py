@@ -209,12 +209,16 @@ os.chmod (base_path.joinpath ('./sprintplank/credentials.json'), 0o400)
 # Check out git
 git_repo = str (base_path.joinpath ('preview.git'))
 
+if base_path.joinpath ('website').exists ():
+    shutil.rmtree (base_path.joinpath ('website'))
+base_path.joinpath ('website').mkdir ()
+
 if base_path.joinpath ('preview').exists ():
     shutil.rmtree (base_path.joinpath ('preview'))
 base_path.joinpath ('preview').mkdir ()
 
-git_master = subprocess.Popen (['git', '--work-tree=' + str (base_path), '--git-dir=' + git_repo, 'checkout', \
-                                '-f', 'master'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+git_master = subprocess.Popen (['git', '--work-tree=' + str (base_path.joinpath ('website')), '--git-dir=' + \
+                                git_repo, 'checkout', '-f', 'master'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Website Git: Checking out master', git_master)
 
 git_preview = subprocess.Popen (['git', '--work-tree=' + str (base_path.joinpath ('preview')), '--git-dir=' + \
@@ -250,16 +254,16 @@ if certs == 'letsencrypt':
     ssl_csr = './certs/live/' + certbot_domains.split (',')[0] + '/fullchain.pem'
 
 elif certs == 'openssl':
-    openssl_c = ask_question ('\n    Country * [GB] : ', ['GB'])
-    openssl_st = ask_question ('    State [London] : ', ['London'])
-    openssl_l = ask_question ('    Location [London] : ', ['London'])
-    openssl_o = ask_question ('    Organization [Security, Inc] : ', ['Security, Inc'])
-    openssl_ou = ask_question ('    Organizational Unit [IT Department] : ', ['IT Department'])
-    openssl_cn = ask_question ('    Common Name * [example.com] : ', ['example.com'])
-    openssl_credentials = '/C='+openssl_c+'/ST='+openssl_st+'/L='+openssl_l+'/O='+openssl_o \
-                            +'/OU='+openssl_ou+'/CN='+openssl_cn
+    openssl_c = ask_question ('\n    Country * [ex: GB] : ', ['GB'])
+    openssl_st = ask_question ('    State [ex: London] : ', ['London'])
+    openssl_l = ask_question ('    Location [ex: London] : ', ['London'])
+    openssl_o = ask_question ('    Organization [ex: Security, Inc] : ', ['Security, Inc'])
+    openssl_ou = ask_question ('    Organizational Unit [ex: IT Department] : ', ['IT Department'])
+    openssl_cn = ask_question ('    Common Name * [ex: example.com] : ', ['example.com'])
+    openssl_credentials = '"/C='+openssl_c+'/ST='+openssl_st+'/L='+openssl_l+'/O='+openssl_o \
+                            +'/OU='+openssl_ou+'/CN='+openssl_cn+'"'
     openssl_args = ['openssl', 'req', '-nodes', '-x509', '-newkey', 'rsa:4096', '-keyout', 'certs/openssl.key', \
-                    '-out', 'certs/openssl.csr', '-days', '365', '-subj', '/CN=localhost']
+                    '-out', 'certs/openssl.csr', '-days', '365', '-subj', openssl_credentials]
     openssl_cmd = subprocess.Popen (openssl_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     loading_cmd ('   Creating an openssl certificate', openssl_cmd)
     ssl_key = './certs/openssl.key'
@@ -359,7 +363,7 @@ if certs == 'letsencrypt':
 
 # Firewall
 print ('\n\n Configuring your firewall . . .')
-ssh_port = ask_question ('    What\'s your SSH port? [ex: 22] ', ['22'])
+ssh_port = ask_question ('    What\'s your SSH port? [default: 22] ', ['22'])
 ufw_ssh = subprocess.Popen (['ufw', 'allow', ssh_port], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 ufw_ssh.wait ()
 ufw_80 = subprocess.Popen (['ufw', 'allow', '80'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

@@ -22,7 +22,7 @@
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
 
-var app = require ('../app');
+var app = require ('../website/app');
 var ssl = require ('./ssl_config');
 var http = require ('http');
 var https = require ('https');

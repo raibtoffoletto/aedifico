@@ -7,7 +7,7 @@ TEMP="$HOME/.tmp-aedifico/"
 REPO="$PWD"
 
 if [ $remote_ref = 'refs/heads/master' ]; then
-    TARGET="$PWD/../"
+    TARGET="$PWD/../website/"
     BRANCH="master"
     SERVICE="aedifico.service"
 elif [ $remote_ref = 'refs/heads/preview' ]; then
