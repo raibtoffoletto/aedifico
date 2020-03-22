@@ -25,6 +25,7 @@
 import os, sys, time, subprocess, shutil, socket, platform
 from pathlib import Path
 from getpass import getpass
+from termios import tcflush, TCIFLUSH
 
 # Functions
 def loading_cmd (message,waiting_cmd):
@@ -41,16 +42,19 @@ def loading_cmd (message,waiting_cmd):
     sys.stdout.write ('\r ' + message + ', done!\n')
 
 def ask_question (message, answers = [], strict = False):
+    tcflush(sys.stdin, TCIFLUSH)
     user_input = (input (message)).lower ().strip ()
     if len(answers) != 0:
         if strict:
             while not user_input in answers:
+                tcflush(sys.stdin, TCIFLUSH)
                 user_input = (input (message)).lower ().strip ()
             return user_input
 
         return (user_input if user_input != "" else answers[0])
     else:
         while user_input == "":
+            tcflush(sys.stdin, TCIFLUSH)
             user_input = (input (message)).lower ().strip ()
         return user_input
 
@@ -85,7 +89,7 @@ if len (sys.argv) > 1:
     if sys.argv [1] == '--uninstall' or sys.argv [1] == '-u' :
         uninstall = ask_question ('\n This script will uninstall Aedifico from your system.\n\n' \
                             + ' -- Would you like to proceed? [y/n]: ', ['y','n'], True)
-        if uninstall.lower ().strip () != 'y':
+        if uninstall != 'y':
             print ('\n Exiting installer ...\n')
             sys.exit (0)
 
