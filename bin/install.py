@@ -345,6 +345,8 @@ if certs == 'letsencrypt':
     certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone --config-dir ' + base_path.joinpath ('./bin/certs'))
     certbot_file.write ('--pre-hook "systemctl stop aedifico.service" ')
     certbot_file.write ('--post-hook "systemctl start aedifico.service" ')
+    certbot_file.write ('--deploy-hook "systemctl restart aedifico-preview.service" ')
+    certbot_file.write ('--deploy-hook "systemctl restart aedifico-sprintplank.service" ')
     certbot_file.write ('--quiet\n')
     certbot_file.close ()
     os.chmod (Path ('/etc/systemd/system/certbot-renewal.service'), 0o644)
