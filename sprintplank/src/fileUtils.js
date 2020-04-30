@@ -354,6 +354,11 @@ var sanitize = function (str) {
     str = str.replace ('>', '-');
     str = str.replace ('/', '-');
     str = str.replace (/\s/g, '_');
+    str = str.replace (/\-\_/g, '_');
+
+    do {
+        str = str.slice (0, -1);
+    } while (str.slice (-1) === '-');
 
     return str;
 };
