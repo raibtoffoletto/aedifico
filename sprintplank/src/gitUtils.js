@@ -26,6 +26,7 @@ const repo_remote = path.join (__dirname, '../../preview.git');
 const signature = JSON.parse (fs.readFileSync (path.join (__dirname, '../git.json')));
 
 var checkRepo = function () {
+    console.log (' + + Verify if local repo is up to date.');
     let repository, last_on_preview, last_on_origin;
 
     new Promise (function (resolve, reject) {

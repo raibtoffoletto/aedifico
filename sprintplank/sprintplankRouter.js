@@ -35,6 +35,13 @@ const media_upload = multer ({storage: media_storage});
 
 gitUtils.checkRepo ();
 
+const keepUp = () => {
+  return (req, res, next) => {
+    gitUtils.checkRepo ();
+    next();
+  }
+}
+
 function defaultMetadata () {
     this.path = ['~'];
     this.showSearch = false;
@@ -115,7 +122,7 @@ router.get ('/codemirror-javascript.js', function (req, res, next) {
 });
 
 //  === main routes ===
-router.get (/^\/pages[\/]?$/, function (req, res, next) {
+router.get (/^\/pages[\/]?$/, keepUp (), function (req, res, next) {
   if (req.query ['f']) {
         let edit_page_metadata = new defaultMetadata ();
             edit_page_metadata.path = ['~', 'content', 'pages', 'editor'];
@@ -134,7 +141,7 @@ router.get (/^\/pages[\/]?$/, function (req, res, next) {
     }
 });
 
-router.get (/^\/posts[\/]?$/, function (req, res, next) {
+router.get (/^\/posts[\/]?$/, keepUp (), function (req, res, next) {
     if (req.query ['f']) {
         let edit_post_metadata = new defaultMetadata ();
             edit_post_metadata.path = ['~', 'content', 'posts', 'editor'];
@@ -160,7 +167,7 @@ router.get (/^\/posts[\/]?$/, function (req, res, next) {
     }
 });
 
-router.get (/^\/multimedia[\/]?$/, function (req, res, next) {
+router.get (/^\/multimedia[\/]?$/, keepUp (), function (req, res, next) {
     let media_metadata = new defaultMetadata ();
         media_metadata.path = ['~', 'content', 'multimedia'];
         media_metadata.showSearch = true;
@@ -169,7 +176,7 @@ router.get (/^\/multimedia[\/]?$/, function (req, res, next) {
     res.render ('list-multimedia', media_metadata);
 });
 
-router.get (/^\/menu[\/]?$/, function (req, res, next) {
+router.get (/^\/menu[\/]?$/, keepUp (), function (req, res, next) {
     let menu_metadata = new defaultMetadata ();
         menu_metadata.path = ['~', 'content', 'menu'];
         menu_metadata.edit_menu = true;
@@ -250,7 +257,7 @@ router.get (/^\/getmenu[\/]?$/, function (req, res, next) {
     res.send (new fileUtils.getMenu ());
 });
 
-router.get ('/', function (req, res, next) {
+router.get ('/', keepUp (), function (req, res, next) {
     let aedifico, aedifico_preview, git_status;
 
     gitUtils.getStatus ().then (function (got_status) {
