@@ -155,6 +155,7 @@ apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-prope
 loading_cmd ('Installing dependencies', apt_install)
 
 # Add NodeJS v12 repository
+# NodeGIT does not support v14 yet.
 curl_node = subprocess.Popen (['curl', '-sL', 'https://deb.nodesource.com/setup_12.x'], stdout=subprocess.PIPE, \
                                 stderr=subprocess.PIPE)
 bash_node = subprocess.Popen (['bash'], stdin=curl_node.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
