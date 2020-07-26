@@ -23,56 +23,66 @@ const path = require ('path');
 const session = require ('express-session');
 const passport = require ('./sprintplankPassport');
 const helmet = require ('helmet');
-const expressBrute = require ('express-brute');
-const redisStore = require ('express-brute-redis');
+const expressBruteFlex = require ('rate-limiter-flexible/lib/ExpressBruteFlexible');
+const redis = require ('redis');
 
-var ipStore = new redisStore ({host: '127.0.0.1', port: 6379});
-var bruteForce = new expressBrute (ipStore);
+const redisClient = redis.createClient ({
+  enable_offline_queue: false,
+});
 
-var app = express ();
-    app.set ('views', path.join (__dirname, 'views'));
-    app.set ('view engine', 'ejs');
-    app.use (helmet ());
-    app.use (logger ('dev'));
-    app.use (express.json ());
-    app.use (express.urlencoded ({ extended: false }));
-    app.use (session ({
-      secret: passport.getSalt (),
-      resave: false,
-      saveUninitialized: false
-    }));
+const bruteForce = new expressBruteFlex (expressBruteFlex.LIMITER_TYPES.REDIS, 
+  {
+    freeRetries: 4,
+    minWait: 5000, // 5 sec
+    maxWait: 900000, // 15 min
+    storeClient: redisClient,
+  }
+);
 
-    app.use ('/login', bruteForce.prevent, function (req, res, next) {
-      if (passport.verifyCredentials (req.body.password)) {
-        req.session.lock = 'open';
-        res.writeHead (301, {'Location': req.headers['referer']});
-        res.end ();
-      } else {
-        req.session.lock = 'lock';
-        next ();
-      }
-    });
+const app = express ();
+      app.set ('views', path.join (__dirname, 'views'));
+      app.set ('view engine', 'ejs');
+      app.use (helmet ());
+      app.use (logger ('dev'));
+      app.use (express.json ());
+      app.use (express.urlencoded ({ extended: false }));
+      app.use (session ({
+        secret: passport.getSalt (),
+        resave: false,
+        saveUninitialized: false
+      }));
 
-    app.use (function (req, res, next) {
-      if (req.session.lock === 'open') {
+      app.use ('/login', bruteForce.prevent, function (req, res, next) {
+        if (passport.verifyCredentials (req.body.password)) {
+          req.session.lock = 'open';
+          res.writeHead (301, {'Location': req.headers['referer']});
+          res.end ();
+        } else {
+          req.session.lock = 'lock';
           next ();
-      } else {
-          res.render ('login');
-      }
-    });
+        }
+      });
 
-    app.use ('/', require ('./sprintplankRouter'));
+      app.use (function (req, res, next) {
+        if (req.session.lock === 'open') {
+            next ();
+        } else {
+            res.render ('login');
+        }
+      });
 
-    app.use (function (req, res, next) {
-      next (create_error (404));
-    });
+      app.use ('/', require ('./sprintplankRouter'));
 
-    app.use (function (err, req, res, next) {
-      res.locals.message = err.message;
-      res.locals.error = req.app.get ('env') === 'development' ? err : {};
-      res.status (err.status || 500);
-      res.send ('<center><h1> Error ' + err.status + '</h1><p>' + err.message + '</p></center>');
-      console.log (err.message);
-    });
+      app.use (function (req, res, next) {
+        next (create_error (404));
+      });
+
+      app.use (function (err, req, res, next) {
+        res.locals.message = err.message;
+        res.locals.error = req.app.get ('env') === 'development' ? err : {};
+        res.status (err.status || 500);
+        res.send ('<center><h1> Error ' + err.status + '</h1><p>' + err.message + '</p></center>');
+        console.log (err.message);
+      });
 
 module.exports = app;
