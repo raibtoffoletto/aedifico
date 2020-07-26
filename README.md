@@ -98,5 +98,7 @@ My heartfelt thanks to:
 - [Multer](https://github.com/expressjs/multer)
 - [Node bcrypt](https://github.com/kelektiv/node.bcrypt.js)
 - [NodeGit](https://www.nodegit.org)
+- [Rate-Limiter-Flexible](https://github.com/animir/node-rate-limiter-flexible)
+- [Redis](https://redis.io/)
 - [Sass](https://sass-lang.com)
 - [SimpleMDE](https://simplemde.com)
