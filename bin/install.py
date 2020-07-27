@@ -128,7 +128,7 @@ if len (sys.argv) > 1:
             git_hash_file = open (base_path.joinpath ('.git_hash'))
             current_git_hash = git_hash_file.read ()
             git_hash_file.close ()
-        elif subprocess.run (['git', 'rev-parse', 'HEAD']).returncode == 0 :
+        elif subprocess.run (['git', 'rev-parse', 'HEAD'], capture_output=True).returncode == 0 :
             current_git_hash = subprocess.getoutput ('git rev-parse HEAD')
 
         print ('  Aedifico (https://github.com/raibtoffoletto/aedifico)')
