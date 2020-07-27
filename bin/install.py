@@ -121,13 +121,40 @@ if len (sys.argv) > 1:
         ufw_2083.wait ()
         print ('\n\n -- All files removed! See ya . . . \n\n')
         sys.exit (0)
-    else:
-        print ('\n  Usage: sudo python3 install.py')
-        print ('    or:  sudo python3 install.py --uninstall\n')
+    else if sys.argv [1] == '--version' or sys.argv [1] == '-v' :
+        current_git_hash = None
+
+        if base_path.joinpath ('.git_hash').exists () :
+            git_hash_file = open (base_path.joinpath ('.git_hash'))
+            current_git_hash = git_hash_file.read ()
+            git_hash_file.close ()
+        else if subprocess.run (['git', 'rev-parse', 'HEAD']).returncode == 0 :
+            current_git_hash = subprocess.getoutput ('git rev-parse HEAD')
+
+        print ('  Aedifico (https://github.com/raibtoffoletto/aedifico)\n')
+
+        if current_git_hash != None :
+            print (f'  Current git hash: {current_git_hash} \n')
+        else :
+            print ('  No version info at this moment. Try to reclone the repo. \n')
+
+        print ('\n  Copyright (c) 2019 Raí B. Toffoletto (https://toffoletto.me)\n')
+        print ('  License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\n')
+        print ('  This is free software: you are free to change and redistribute it.\n')
+        print ('  There is NO WARRANTY, to the extent permitted by law.\n')
+        print ('  Written by Raí B. Toffoletto <rai@toffoletto.me>.\n')
+
+        sys.exit (0)
+    else if sys.argv [1] == '--help' or sys.argv [1] == '-h' :
+        print ('\n  Usage: sudo python3 install.py [--uninstall] [--version] [--help]')
         print ('  This script install Aedifico in your server.\n')
         print ('    -u, --uninstall   removes all system files installed by this installer')
-        print ('    --help            show this information\n')
+        print ('    -v, --version     displays git\'s hash for this version\n')
+        print ('    -h, --help        displays this information\n')
         sys.exit (0)
+    else:
+        print ('  Try sudo python3 install.py --help for more information.\n')
+        sys.exit (0)        
 
 # Get consent
 firstrun_alert = ask_question ('\n This script will install a new instance of Aedifico,\n' \
@@ -170,6 +197,12 @@ loading_cmd ('Installing NodeJS v12.x', node_install)
 # Install npm packages
 npm_install = subprocess.Popen (['npm', 'install'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 loading_cmd ('Installing npm packages', npm_install)
+
+# Stores the current git hash.
+git_hash = open (base_path.joinpath ('.git_hash'), 'w')
+git_hash.write (subprocess.getoutput ('git rev-parse HEAD'))
+git_hash.close ()
+os.chmod (base_path.joinpath ('.git_hash'), 0o600)
 
 # Removes the .git directory
 print (' Cleaning up git.')
