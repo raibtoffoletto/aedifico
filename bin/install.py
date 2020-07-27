@@ -131,18 +131,18 @@ if len (sys.argv) > 1:
         elif subprocess.run (['git', 'rev-parse', 'HEAD']).returncode == 0 :
             current_git_hash = subprocess.getoutput ('git rev-parse HEAD')
 
-        print ('  Aedifico (https://github.com/raibtoffoletto/aedifico)\n')
+        print ('  Aedifico (https://github.com/raibtoffoletto/aedifico)')
 
         if current_git_hash != None :
-            print (f'  Current git hash: {current_git_hash} \n')
+            print (f'  Current git hash: {current_git_hash}')
         else :
-            print ('  No version info at this moment. Try to reclone the repo. \n')
+            print ('  No version info at this moment. Try to reclone the repo. ')
 
-        print ('\n  Copyright (c) 2019 Raí B. Toffoletto (https://toffoletto.me)\n')
-        print ('  License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\n')
-        print ('  This is free software: you are free to change and redistribute it.\n')
-        print ('  There is NO WARRANTY, to the extent permitted by law.\n')
-        print ('  Written by Raí B. Toffoletto <rai@toffoletto.me>.\n')
+        print ('\n  Copyright (c) 2019 Raí B. Toffoletto (https://toffoletto.me)')
+        print ('  License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.')
+        print ('  This is free software: you are free to change and redistribute it.')
+        print ('  There is NO WARRANTY, to the extent permitted by law.')
+        print ('\n  Written by Raí B. Toffoletto <rai@toffoletto.me>.')
 
         sys.exit (0)
     elif sys.argv [1] == '--help' or sys.argv [1] == '-h' :
