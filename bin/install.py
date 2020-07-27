@@ -121,14 +121,14 @@ if len (sys.argv) > 1:
         ufw_2083.wait ()
         print ('\n\n -- All files removed! See ya . . . \n\n')
         sys.exit (0)
-    else if sys.argv [1] == '--version' or sys.argv [1] == '-v' :
+    elif sys.argv [1] == '--version' or sys.argv [1] == '-v' :
         current_git_hash = None
 
         if base_path.joinpath ('.git_hash').exists () :
             git_hash_file = open (base_path.joinpath ('.git_hash'))
             current_git_hash = git_hash_file.read ()
             git_hash_file.close ()
-        else if subprocess.run (['git', 'rev-parse', 'HEAD']).returncode == 0 :
+        elif subprocess.run (['git', 'rev-parse', 'HEAD']).returncode == 0 :
             current_git_hash = subprocess.getoutput ('git rev-parse HEAD')
 
         print ('  Aedifico (https://github.com/raibtoffoletto/aedifico)\n')
@@ -145,7 +145,7 @@ if len (sys.argv) > 1:
         print ('  Written by Raí B. Toffoletto <rai@toffoletto.me>.\n')
 
         sys.exit (0)
-    else if sys.argv [1] == '--help' or sys.argv [1] == '-h' :
+    elif sys.argv [1] == '--help' or sys.argv [1] == '-h' :
         print ('\n  Usage: sudo python3 install.py [--uninstall] [--version] [--help]')
         print ('  This script install Aedifico in your server.\n')
         print ('    -u, --uninstall   removes all system files installed by this installer')
