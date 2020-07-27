@@ -22,9 +22,10 @@
 #                                                                   #
 #####################################################################
 
-import sys, time
+import os, sys, time
 from getpass import getpass
 from termios import tcflush, TCIFLUSH
+from pathlib import Path
 
 # Swissknife functions
 def loading_cmd (message,waiting_cmd):
@@ -67,3 +68,13 @@ def get_password ():
         else:
             passwd_same = True
     return passwd
+
+def is_sudo ():
+    if os.geteuid () != 0 :
+        print ("\n This script needs `root` privileges! Use `sudo`. \n")
+        sys.exit (0)
+
+def is_in_path ():
+    if Path.cwd ().parent.name != 'aedifico' :
+        print ('\n You should run this script inside the `aedifico/bin` directory.\n')
+        sys.exit (0)

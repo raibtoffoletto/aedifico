@@ -22,24 +22,17 @@
 #                                                                   #
 #####################################################################
 
-import os, sys, time, subprocess, shutil, socket, platform, swissknife
+import os, sys, time, subprocess, shutil, socket, swissknife
 from pathlib import Path
-from getpass import getpass
-from termios import tcflush, TCIFLUSH
 
-# Check for privileges
-if os.geteuid () != 0 :
-    print ("\n This script needs `sudo` privileges!\n")
-    sys.exit (0)
+# Initial Checks
+swissknife.is_sudo ()
+swissknife.is_in_path ()
 
+# Set initial vars
 user_uid = int (os.environ['SUDO_UID'])
 user_gid = int (os.environ['SUDO_GID'])
-
-# Check for path compatibility
 base_path = Path.cwd ().parent
-if base_path.name != 'aedifico' :
-    print ('\n You should run this script inside the `bin` directory.\n')
-    sys.exit (0)
 
 # Script arguments
 if len (sys.argv) > 1:
@@ -53,15 +46,20 @@ if len (sys.argv) > 1:
         subprocess.call (['systemctl', 'stop', 'aedifico.service'])
         subprocess.call (['systemctl', 'stop', 'aedifico-preview.service'])
         subprocess.call (['systemctl', 'stop', 'aedifico-sprintplank.service'])
+        subprocess.call (['systemctl', 'stop', 'aedifico-update.timer'])
         subprocess.call (['systemctl', 'disable', 'aedifico.service'])
         subprocess.call (['systemctl', 'disable', 'aedifico-preview.service'])
         subprocess.call (['systemctl', 'disable', 'aedifico-sprintplank.service'])
+        subprocess.call (['systemctl', 'disable', 'aedifico-update.timer'])
+        Path (base_path.joinpath ('.git_hash')).unlink ()
         Path ('/usr/bin/aedifico').unlink ()
         Path ('/usr/bin/aedifico-preview').unlink ()
         Path ('/usr/bin/aedifico-sprintplank').unlink ()
         Path ('/etc/systemd/system/aedifico.service').unlink ()
         Path ('/etc/systemd/system/aedifico-preview.service').unlink ()
         Path ('/etc/systemd/system/aedifico-sprintplank.service').unlink ()
+        Path ('/etc/systemd/system/aedifico-update.service').unlink ()
+        Path ('/etc/systemd/system/aedifico-update.timer').unlink ()
         if Path ('/etc/systemd/system/certbot-renewal.timer').exists ():
             subprocess.call (['systemctl', 'stop', 'certbot-renewal.timer'])
             subprocess.call (['systemctl', 'disable', 'certbot-renewal.timer'])
@@ -135,7 +133,7 @@ swissknife.loading_cmd ('Upgrading your system', apt_upgrade)
 
 # Install necessary packages
 apt_install = subprocess.Popen (['apt', 'install', '-y', 'curl', 'software-properties-common', 'ufw', 'certbot', \
-                                'redis-server'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                'redis-server', 'coreutils'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 swissknife.loading_cmd ('Installing dependencies', apt_install)
 
 # Add NodeJS v12 repository
@@ -148,7 +146,8 @@ swissknife.loading_cmd ('Adding NodeJS repository for Debian/Ubuntu', bash_node)
 apt_update = subprocess.Popen (['apt', 'update'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 swissknife.loading_cmd ('Updating your system', apt_update)
 time.sleep (5)
-node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=12.*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+node_install = subprocess.Popen (['apt', 'install', '-y', 'nodejs=12.*'], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 swissknife.loading_cmd ('Installing NodeJS v12.x', node_install)
 
 # Install npm packages
@@ -314,26 +313,31 @@ swissknife.loading_cmd ('Starting systemd aedifico-preview.service', preview_sta
 sprintplank_file = open (Path ('/etc/systemd/system/aedifico-sprintplank.service'), 'w')
 sprintplank_file.write ('[Unit]\nDescription=NodeJS custom web server\nWants=network-online.target\n')
 sprintplank_file.write ('After=network.target network-online.target\n\n[Service]\nType=simple\n')
-sprintplank_file.write ('User=' + os.environ['SUDO_UID'] + '\nGroup=' + os.environ['SUDO_GID'] + '\n')
+sprintplank_file.write (f'User={user_uid}\nGroup={user_gid}\n')
 sprintplank_file.write ('ExecStart=/usr/bin/aedifico-sprintplank\n\n[Install]\nWantedBy=multi-user.target\n')
 sprintplank_file.close ()
 os.chmod (Path ('/etc/systemd/system/aedifico-sprintplank.service'), 0o644)
 sprintplank_enable = subprocess.Popen (['systemctl', 'enable', 'aedifico-sprintplank.service'], \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-swissknife.loading_cmd ('Enabling systemd aedifico-sprintplank.service', preview_enable)
+swissknife.loading_cmd ('Enabling systemd aedifico-sprintplank.service', sprintplank_enable)
 sprintplank_start = subprocess.Popen (['systemctl', 'start', 'aedifico-sprintplank.service'], \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-swissknife.loading_cmd ('Starting systemd aedifico-sprintplank.service', preview_start)
+swissknife.loading_cmd ('Starting systemd aedifico-sprintplank.service', sprintplank_start)
 
 print (' Setting sudo priviledges for user ' + os.environ['SUDO_USER'])
 sudoers_file = open (Path ('/etc/sudoers'), 'a')
-sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ' + socket.gethostname() + '=(root) NOPASSWD: /bin/systemctl\n')
+sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ' + socket.gethostname() \
+                    + '=(root) NOPASSWD: /bin/systemctl\n')
+sudoers_file.write ('\n' + os.environ['SUDO_USER'] + '   ' + socket.gethostname() \
+                    + f'=(root) NOPASSWD: {base_path.joinpath ("bin","update.py")}\n')
 sudoers_file.close ()
+os.chmod (base_path.joinpath ('bin','update.py'), 0o755)
 
 if certs == 'letsencrypt':
     certbot_file = open (Path ('/etc/systemd/system/certbot-renewal.service'), 'w')
     certbot_file.write ('[Unit]\nDescription=Certbot Renewal\n\n[Service]\nType=oneshot\n')
-    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone --config-dir ' + base_path.joinpath ('./bin/certs'))
+    certbot_file.write ('ExecStart=/usr/bin/certbot renew --standalone ')
+    certbot_file.write (f'--config-dir {base_path.joinpath ("./bin/certs")}')
     certbot_file.write ('--pre-hook "systemctl stop aedifico.service" ')
     certbot_file.write ('--post-hook "systemctl start aedifico.service" ')
     certbot_file.write ('--deploy-hook "systemctl restart aedifico-preview.service" ')
@@ -343,7 +347,7 @@ if certs == 'letsencrypt':
     os.chmod (Path ('/etc/systemd/system/certbot-renewal.service'), 0o644)
 
     certbot_timer = open (Path ('/etc/systemd/system/certbot-renewal.timer'), 'w')
-    certbot_timer.write ('[Unit]\nDescription=Timer for Certbot Renewal\n\n[Timer]\nOnCalendar=*-*-* 06,18:00:00\n')
+    certbot_timer.write ('[Unit]\nDescription=Timer for Certbot Renewal\n\n[Timer]\nOnCalendar=*-*-* 3:43:00\n')
     certbot_timer.write ('RandomizedDelaySec=55m\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n')
     certbot_timer.close ()
     os.chmod (Path ('/etc/systemd/system/certbot-renewal.timer'), 0o644)
@@ -355,6 +359,24 @@ if certs == 'letsencrypt':
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     swissknife.loading_cmd ('Starting systemd certbot-renewal.timer', certbot_start)
 
+update_file = open (Path ('/etc/systemd/system/aedifico-update.service'), 'w')
+update_file.write ('[Unit]\nDescription=Aedifico self update\n\n[Service]\nType=oneshot\n')
+update_file.write (f'User={user_uid}\nGroup={user_gid}\n')
+update_file.write (f'WorkingDirectory={base_path.joinpath ("bin")}\n')
+update_file.write (f'ExecStart=sudo {base_path.joinpath ("bin", "update.py")}\n')
+update_file.close ()
+os.chmod (Path ('/etc/systemd/system/aedifico-update.service'), 0o644)
+update_timer = open (Path ('/etc/systemd/system/aedifico-update.timer'), 'w')
+update_timer.write ('[Unit]\nDescription=Timer for Aedifico update\n\n[Timer]\nOnCalendar=*-*-* 1:37:00\n')
+update_timer.write ('RandomizedDelaySec=55m\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n')
+update_timer.close ()
+os.chmod (Path ('/etc/systemd/system/aedifico-update.timer'), 0o644)
+update_enable = subprocess.Popen (['systemctl', 'enable', 'aedifico-update.timer'], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+swissknife.loading_cmd ('Enabling systemd aedifico-update.timer', update_enable)
+update_start = subprocess.Popen (['systemctl', 'start', 'aedifico-update.timer'], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+swissknife.loading_cmd ('Starting systemd aedifico-update.timer', update_start)
 
 # Firewall
 print ('\n\n Configuring your firewall . . .')
