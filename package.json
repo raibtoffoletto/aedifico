@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
+    "@staaky/fresco": "^2.3.1",
     "bcrypt": "^5.0.0",
     "bootstrap": "^4.5.0",
     "codemirror": "^5.56.0",
