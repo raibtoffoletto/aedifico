@@ -60,6 +60,8 @@ These are the following *systemd* services in use:
 - aedifico.service
 - aedifico-preview.service
 - aedifico-sprintplank.service
+- aedifico-update.service
+- certbot-renew.service
 
 You can check the status of each of them with `systemctl status $SERVICE` and the logs with `journalctl -u $SERVICE`.
 
@@ -81,6 +83,14 @@ Clone, modify and than push to the git repository `preview.git`.
 Use primarily the branch `preview`, you can check all modifications at the port 3000. Any commits to the branch `master` will go directly to production, it is wise to use `preview` to test new content and then merge the branches.
 
 *Note:* Commits to other branches won't affect the website, you may use them as back-ups/archives.
+
+### Self-Updates
+
+From version **1.2** a systemd.timer is implemented to check the official git repository and perform the necessary updates without any user interaction. It will not interfere with the website located in `preview.git` nor the information defined in the installation process (i.e. git credentials, password, certificates, etc.)
+
+There's also a service to keep the [letsencrypt](https://letsencrypt.org/)'s certificates up-to-date.
+
+*Note:* The upgrade to version **1.2** must be done manually.
 
 # Acknowledgement:
 **Aedifico** is built using several awesome projects.

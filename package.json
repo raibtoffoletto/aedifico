@@ -3,7 +3,7 @@
   "description": "Framework for publishing simple markdown websites.",
   "version": "1.2.0",
   "keywords": ["webserver", "website", "cms"],
-  "homepage": "https://raibtoffoletto.github.io/aedifico",
+  "homepage": "https://github.com/raibtoffoletto/aedifico",
   "author": "Raí Biason Toffoletto <rai@toffoletto.me> (https://toffoletto.me/)",
   "bugs": {
     "url": "https://github.com/raibtoffoletto/aedifico/issues",
