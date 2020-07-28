@@ -242,6 +242,11 @@ if certs == 'letsencrypt':
     swissknife.loading_cmd ('   Creating a letsencrypt certificate', certbot_cmd)
     ssl_key = './certs/live/' + certbot_domains.split (',')[0] + '/privkey.pem'
     ssl_csr = './certs/live/' + certbot_domains.split (',')[0] + '/fullchain.pem'
+    os.chmod (base_path.joinpath ('./bin/certs'), 0o755)
+    os.chmod (base_path.joinpath ('./bin/certs/live'), 0o755)
+    os.chmod (base_path.joinpath ('./bin/certs/live', certbot_domains.split (',')[0]), 0o755)
+    os.chmod (base_path.joinpath ('./bin/certs/archive'), 0o755)
+    os.chmod (base_path.joinpath ('./bin/certs/archive', certbot_domains.split (',')[0]), 0o755)
 
 elif certs == 'openssl':
     openssl_c = swissknife.ask_question ('\n    Country * [ex: GB] : ', ['GB'])
