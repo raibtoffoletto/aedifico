@@ -91,21 +91,21 @@ if current_git_hash == None :
 repository_hash = subprocess.getoutput ('git ls-remote https://github.com/raibtoffoletto/aedifico.git \
                                         refs/heads/master | cut -f 1')
 
-if current_git_hash == repository_hash:
-    print ('  You are up to date!\n  Nothing to do here...')
-    sys.exit (0)
-
-print ('  Performing updates.\n  The website will be down for a few moments...\n')
-
-# Stop services
-stop_services ()
-
 # Updates the system
 apt_update = subprocess.Popen (['apt', 'update'], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 swissknife.loading_cmd (' Updating your system', apt_update)
 time.sleep (3)
 apt_upgrade = subprocess.Popen (['apt', 'full-upgrade', '-y'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 swissknife.loading_cmd (' Upgrading your system', apt_upgrade)
+
+if current_git_hash == repository_hash:
+    print ('  Aedifico is up to date!\n  Nothing to do here...')
+    sys.exit (0)
+
+print ('  Performing updates.\n  The website will be down for a few minutes...\n')
+
+# Stop services
+stop_services ()
 
 # Git checkout and clean up
 if git_new_tree.exists () :
