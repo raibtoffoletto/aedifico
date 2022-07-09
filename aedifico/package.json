@@ -1,0 +1,15 @@
+{
+  "name": "aedifico",
+  "license": "GPL-3.0",
+  "version": "2.0.0",
+  "dependencies": {
+    "morgan": "^1.10.0",
+    "serve-handler": "^6.1.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1"
+  }
+}

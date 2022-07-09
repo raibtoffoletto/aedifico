@@ -1,1 +1,25 @@
+certs
+credentials.json
+sprintplank/src
+
+# dependencies
+node_modules
+.env
+
+# certs
+bin/openssl*
+
+# misc
 *~
+.DS_Store
+.env
+.yarn
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# next.js
+.next/
+out/
+build/
