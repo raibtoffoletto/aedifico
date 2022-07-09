@@ -21,7 +21,6 @@
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
 
-/* eslint-disable no-console */
 const { join } = require('path');
 const https = require('https');
 const morgan = require('morgan');
