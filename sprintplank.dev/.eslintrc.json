@@ -1,12 +1,17 @@
 {
   "env": {
+    "browser": true,
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "plugins": ["prettier"],
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": ["react-app", "eslint:recommended", "plugin:prettier/recommended"],
   "rules": {
     "no-extra-boolean-cast": "off",
     "no-unused-vars": "warn",
