@@ -16,7 +16,7 @@
   "license": "GPL-3.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/main.js",
+    "start": "node ./aedifico/main.js",
     "sprintplank": "node ./sprintplank/main.js"
   },
   "workspaces": [
