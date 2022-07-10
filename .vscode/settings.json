@@ -2,6 +2,7 @@
   "eslint.workingDirectories": [
     "./aedifico",
     "./sprintplank",
-    "./sprintplank.dev"
+    "./sprintplank.dev",
+    "./website"
   ]
 }
