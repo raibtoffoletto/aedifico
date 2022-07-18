@@ -1,0 +1,31 @@
+html {
+  height: -webkit-fill-available !important;
+}
+
+body {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  min-height: -webkit-fill-available !important;
+}
+
+body,
+#__next {
+  margin: 0 !important;
+  padding: 4px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+#__next {
+  width: 100% !important;
+  max-width: 960px !important;
+  flex-grow: 1 !important;
+  gap: 16px;
+}
+
+ul {
+  list-style-position: inside !important;
+}
