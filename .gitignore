@@ -4,7 +4,7 @@ sprintplank/src
 
 # dependencies
 node_modules
-.env
+.env*
 
 # certs
 bin/openssl*
