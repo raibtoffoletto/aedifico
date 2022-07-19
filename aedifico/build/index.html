@@ -1,0 +1,125 @@
+<!--
+* Aedifico framework
+* Copyright (C) 2019 - Raí Biason Toffoletto <rai@toffoletto.me>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Aedifico WebSite</title>
+
+    <link rel="icon" href="/aedifico.png" />
+    <link rel="apple-touch-icon" href="/aedifico.png" />
+    <link rel="canonical" href="https://github.com/raibtoffoletto/aedifico" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Aedifico" />
+    <meta name="description" content="A markdown static website made with the Aedifico framework." />
+    <meta name="robots" content="index,follow" />
+
+    <meta property="og:title" content="Aedifico WebSite" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:description" content="A markdown static website made with the Aedifico framework." />
+    <meta property="og:image" content="/aedifico.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aedifico WebSite" />
+    <meta property="og:url" content="https://github.com/raibtoffoletto/aedifico" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="https://github.com/raibtoffoletto/aedifico" />
+    <meta name="twitter:title" content="Aedifico WebSite" />
+    <meta name="twitter:creator" content="Aedifico" />
+    <meta name="twitter:description" content="A markdown static website made with the Aedifico framework." />
+    <meta name="twitter:image" content="/aedifico.png" />
+
+    <style>
+      body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background: #222;
+        color: #ccc;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5vmin;
+      }
+
+      img {
+        display: block;
+        margin: auto;
+        height: 25vmin;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        padding: 0;
+        font-weight: 400;
+      }
+
+      a {
+        color: #efefef;
+        text-decoration: none;
+        position: relative;
+        display: inline-block;
+      }
+
+      a:after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #efefef;
+        opacity: 1;
+        transition: opacity 300ms, transform 300ms;
+        transform: scale(0);
+        transform-origin: center;
+      }
+
+      a:hover:after,
+      a:focus:after {
+        transform: scale(1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <img src="/aedifico.png" alt="Aedifico - Under construction" />
+      <h1>Under Construction</h1>
+      <h2>
+        Being built with
+        <a href="https://github.com/raibtoffoletto/aedifico" target="_blank">
+          <strong> Aedifico </strong>
+        </a>
+      </h2>
+    </main>
+  </body>
+</html>
