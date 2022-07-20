@@ -1,4 +1,5 @@
 import { Prism } from 'react-syntax-highlighter';
+import { a11yDark as codeTheme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {
   Heading,
   Text,
@@ -18,7 +19,7 @@ export const p = (props) => (
     sx={{
       my: 2,
       fontWeight: 300,
-      textAlign: 'justify',
+      textAlign: 'left',
       textIndent: indent,
     }}
   />
@@ -44,12 +45,18 @@ export const h5 = (props) => (
 
 export const h6 = h5;
 
-export const a = ({ props }) => (
+export const a = (props) => (
   <Link {...props} color="blue.600" fontWeight={500} />
 );
 
-export const pre = ({ children }) => {
-  if (children?.type?.name === 'code') {
+export const ul = (props) => <UnorderedList {...props} ml={indent} my={4} />;
+
+export const ol = (props) => <OrderedList {...props} ml={indent} my={4} />;
+
+export const li = (props) => <ListItem {...props} my={1.5} fontWeight={300} />;
+
+export const code = ({ className, children, ...props }) => {
+  if (className?.includes?.('language')) {
     return (
       <Prism
         codeTagProps={{
@@ -58,27 +65,22 @@ export const pre = ({ children }) => {
             lineHeight: 1.75,
           },
         }}
-        language={
-          `${children?.props?.className}`?.split?.('-')?.[1] ?? 'javascript'
-        }
+        language={`${className}`?.split?.('-')?.[1] ?? 'javascript'}
+        style={codeTheme}
         showLineNumbers
         wrapLongLines
       >
-        {children?.props?.children}
+        {children}
       </Prism>
     );
   }
 
-  return <pre>{children}</pre>;
+  return (
+    <Kbd {...props} className={className} fontSize="1rem">
+      {children}
+    </Kbd>
+  );
 };
-
-export const ul = (props) => <UnorderedList {...props} ml={indent} my={4} />;
-
-export const ol = (props) => <OrderedList {...props} ml={indent} my={4} />;
-
-export const li = (props) => <ListItem {...props} my={1.5} fontWeight={300} />;
-
-export const code = (props) => <Kbd {...props} fontSize="1rem" />;
 
 export const blockquote = (props) => (
   <Container
