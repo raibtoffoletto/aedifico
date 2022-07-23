@@ -3,22 +3,25 @@
   "license": "GPL-3.0",
   "version": "2.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build"
+    "dev": "PORT=5000 next dev",
+    "start": "nodemon",
+    "build": "NODE_ENV=production next build",
+    "export": "NODE_ENV=production next build && NODE_ENV=production next export"
   },
   "dependencies": {
     "@chakra-ui/icons": "2.0.3",
     "@chakra-ui/react": "2.2.1",
     "@emotion/react": "11.9.3",
     "@emotion/styled": "11.9.3",
-    "@fontsource/bad-script": "4.5.7",
     "@fontsource/ibm-plex-mono": "4.5.10",
     "@fontsource/nunito": "4.5.9",
+    "@fontsource/opendyslexic": "4.5.4",
     "@fontsource/ubuntu": "4.5.10",
     "framer-motion": "6.4.3",
     "gray-matter": "^4.0.3",
-    "next": "12.2.2",
+    "next": "12.2.0",
     "next-mdx-remote": "^4.0.3",
+    "nodemon": "^2.0.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-social-icons": "^5.14.0",
@@ -29,7 +32,7 @@
   },
   "devDependencies": {
     "eslint": "8.19.0",
-    "eslint-config-next": "12.2.2",
+    "eslint-config-next": "12.2.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.7.1"

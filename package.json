@@ -17,8 +17,7 @@
   "private": true,
   "scripts": {
     "start": "node ./aedifico/main.js",
-    "sprintplank": "node ./sprintplank/main.js",
-    "preview": "node ./sprintplank/main.js"
+    "sprintplank": "node ./sprintplank/main.js"
   },
   "workspaces": [
     "aedifico",

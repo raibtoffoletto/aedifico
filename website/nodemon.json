@@ -1,0 +1,5 @@
+{
+  "watch": ["publish.timestamp"],
+  "ext": "timestamp",
+  "exec": "PORT=5000 next dev"
+}
