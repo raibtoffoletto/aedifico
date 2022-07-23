@@ -26,9 +26,11 @@ export default function Social({ showOnMobile, links }) {
             fill: '#778 !important',
           },
 
-          '&:hover .social-svg-mask': {
-            opacity: 1,
-            fill: 'inherit !important',
+          '&:hover, &:focus': {
+            '& .social-svg-mask': {
+              opacity: 1,
+              fill: 'inherit !important',
+            },
           },
         },
       }}

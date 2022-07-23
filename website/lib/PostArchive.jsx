@@ -9,36 +9,70 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { useRouter } from 'next/router';
 
-const Spacer = ({ ...props }) => (
-  <Box
-    borderLeft="1px solid #ccc"
-    height={8}
-    mx={'7px'}
-    flexShrink={0}
-    {...props}
-  />
-);
+function Spacer({ ...props }) {
+  return (
+    <Box
+      borderLeft="1px solid #ccc"
+      height={8}
+      mx={'7px'}
+      flexShrink={0}
+      {...props}
+    />
+  );
+}
+
+function Chevron({ open }) {
+  return (
+    <ListIcon
+      as={open ? ChevronDownIcon : ChevronRightIcon}
+      color="gray.500"
+      mr={1}
+    />
+  );
+}
+
+function ListMenuHeader({ ...props }) {
+  return (
+    <ListItem
+      as="button"
+      display="flex"
+      alignItems="center"
+      role="menuitem"
+      width="100%"
+      {...props}
+      sx={{ '&:hover, &:focus': { backgroundColor: 'gray.100' }, ...props?.sx }}
+    />
+  );
+}
+
+function ListMenuCollapsable({ open, label, ...props }) {
+  return (
+    <Collapse
+      in={open}
+      role="menu"
+      aria-hidden={!open ? 'true' : undefined}
+      aria-label={label}
+      {...props}
+    />
+  );
+}
 
 function PostLink({ path, label }) {
-  const { push } = useRouter();
-
   return (
     <>
       <ListItem
         display="flex"
         alignItems="center"
-        as="button"
+        as="a"
+        role="menuitem"
+        href={path}
         gap={'4px'}
         maxWidth="100%"
         sx={{
-          '&:hover': {
+          '&:hover, &:focus': {
             backgroundColor: 'gray.100',
           },
-        }}
-        onClick={() => {
-          push(path);
         }}
       >
         <Spacer width={3} />
@@ -60,30 +94,24 @@ function PostLink({ path, label }) {
 function Month({ month, posts, lng }) {
   const { isOpen, onToggle } = useDisclosure();
 
+  const _month = useMemo(
+    () => new Date(`2000-${month}-01`).toLocaleString(lng, { month: 'long' }),
+    [lng, month]
+  );
+
   return (
     <>
-      <ListItem
-        display="flex"
-        alignItems="center"
-        as="button"
-        width="100%"
-        sx={{ '&:hover': { backgroundColor: 'gray.100' } }}
-        onClick={onToggle}
-      >
+      <ListMenuHeader onClick={onToggle}>
         <Spacer />
-        <ListIcon
-          as={isOpen ? ChevronDownIcon : ChevronRightIcon}
-          color="gray.500"
-          mr={1}
-        />
-        {new Date(`2000-${month}-01`).toLocaleString(lng, { month: 'long' })}
-      </ListItem>
+        <Chevron open={isOpen} />
+        {_month}
+      </ListMenuHeader>
 
-      <Collapse in={isOpen}>
+      <ListMenuCollapsable open={isOpen} label={_month}>
         {Object.keys(posts).map((path) => (
           <PostLink key={path} path={path} label={posts[path]} />
         ))}
-      </Collapse>
+      </ListMenuCollapsable>
     </>
   );
 }
@@ -100,32 +128,16 @@ function Year({ year, months: _months, lng }) {
 
   return (
     <>
-      <ListItem
-        display="flex"
-        alignItems="center"
-        as="button"
-        height={8}
-        width="100%"
-        sx={{
-          '&:hover': {
-            backgroundColor: 'gray.100',
-          },
-        }}
-        onClick={onToggle}
-      >
-        <ListIcon
-          as={isOpen ? ChevronDownIcon : ChevronRightIcon}
-          color="gray.500"
-          mr={1}
-        />
+      <ListMenuHeader height={8} onClick={onToggle}>
+        <Chevron open={isOpen} />
         {year}
-      </ListItem>
+      </ListMenuHeader>
 
-      <Collapse in={isOpen}>
+      <ListMenuCollapsable open={isOpen} label={year}>
         {months.map((month) => (
           <Month key={month} month={month} posts={_months[month]} lng={lng} />
         ))}
-      </Collapse>
+      </ListMenuCollapsable>
     </>
   );
 }
@@ -143,14 +155,14 @@ export default function PostArchive({ postTree, lng, title }) {
       <Text
         fontSize="1rem"
         textTransform="uppercase"
-        fontWeight={100}
-        color="gray.500"
+        fontWeight={300}
+        color="gray.600"
         letterSpacing="0.1rem"
         align="center"
       >
         {title}
       </Text>
-      <List as="div" display="flex" flexDirection="column">
+      <List role="menu" as="div" display="flex" flexDirection="column">
         {years.map((year) => (
           <Year key={year} year={year} months={postTree[year]} lng={lng} />
         ))}

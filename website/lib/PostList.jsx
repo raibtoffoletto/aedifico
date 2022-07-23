@@ -1,13 +1,10 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useMemo, useEffect, Fragment } from 'react';
 import rmMD from 'remove-markdown';
 import { Divider, Flex, Text, Spinner } from '@chakra-ui/react';
 
 const PAGE_SIZE = 5;
 
 function Post({ title, date, content, lng, path }) {
-  const { push } = useRouter();
-
   return (
     <Flex
       width="100%"
@@ -15,14 +12,12 @@ function Post({ title, date, content, lng, path }) {
       flexDirection="column"
       gap={2}
       p={2}
-      as="button"
+      as="a"
+      href={path}
       sx={{
-        '&:hover': {
+        '&:hover, &:focus': {
           backgroundColor: 'gray.100',
         },
-      }}
-      onClick={() => {
-        push(path);
       }}
     >
       <Flex justifyContent="space-between" wrap="wrap">
@@ -63,9 +58,10 @@ export default function PostList({ posts: postList, lng }) {
     }
 
     const pages = Math.ceil(postList.length / PAGE_SIZE);
+
     const compare = Number.isNaN(pages) ? 1 : pages;
 
-    return compare === page + 1;
+    return compare <= page + 1;
   }, [page, postList]);
 
   useEffect(() => {
@@ -123,10 +119,10 @@ export default function PostList({ posts: postList, lng }) {
       gap={2}
     >
       {posts.map((post, i) => (
-        <>
-          <Post key={post?.path} lng={lng} {...post} />
+        <Fragment key={post?.path}>
+          <Post lng={lng} {...post} />
           {i + 1 !== posts.length && <Divider />}
-        </>
+        </Fragment>
       ))}
 
       {!isLastPage && (
@@ -136,6 +132,9 @@ export default function PostList({ posts: postList, lng }) {
             height={10}
             alignItems="center"
             justifyContent="center"
+            tabIndex={0}
+            role="progressbar"
+            aria-label="loading more"
           >
             <Spinner size="md" />
           </Flex>
