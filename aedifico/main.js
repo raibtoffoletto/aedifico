@@ -21,31 +21,52 @@
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
 
-const { join } = require('path');
 const https = require('https');
+const express = require('express');
 const morgan = require('morgan');
 const handler = require('serve-handler');
+const compression = require('compression');
+const { join } = require('path');
 const getCerts = require('./ssl');
 
 async function main() {
   try {
     const { key, cert } = await getCerts();
 
-    https
-      .createServer({ key, cert }, (req, res) => {
-        morgan('common')(req, res, (error) => {
-          if (error instanceof Error) {
-            console.log(`[ERROR]: ${error.message}`);
-          }
-        });
+    const app = express();
 
-        return handler(req, res, {
-          public: join(__dirname, 'build'),
-        });
-      })
-      .listen(3000, () => {
-        console.log('Running at https://localhost:3000');
+    app.use(compression());
+    app.use(morgan('common'));
+    app.use((req, res) => {
+      return handler(req, res, {
+        public: join(__dirname, 'build'),
+        headers: [
+          {
+            source: '**/*',
+            headers: [
+              {
+                key: 'Cache-Control',
+                value: 'max-age=31536000',
+              },
+            ],
+          },
+          {
+            source: '404.html',
+            headers: [
+              {
+                key: 'Cache-Control',
+                value: 'max-age=300',
+              },
+            ],
+          },
+        ],
       });
+    });
+
+    // [!] Accept only https requests
+    https.createServer({ key, cert }, app).listen(3000, () => {
+      console.log('Running at https://localhost:3000');
+    });
   } catch (error) {
     console.log(error);
   }
