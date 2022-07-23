@@ -13,6 +13,11 @@ export default function Header({
 }) {
   const _title = `${title}${!!page ? ` - ${page}` : ''}`;
 
+  if (typeof document !== 'undefined') {
+    // Set up lang attribute to HTML tag from settings
+    document?.documentElement?.setAttribute?.('lang', language);
+  }
+
   return (
     <Head>
       <meta charSet="utf-8" />
