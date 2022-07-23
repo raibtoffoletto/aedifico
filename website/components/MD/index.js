@@ -1,3 +1,4 @@
+export { default as Empty } from './Empty';
 import { Prism } from 'react-syntax-highlighter';
 import { a11yDark as codeTheme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {
@@ -93,10 +94,8 @@ export const blockquote = (props) => (
       maxWidth: `calc(100% - calc(${indent} * 2))`,
       border: '1px solid #ccc',
       borderRadius: 8,
-      fontFamily: '"Bad Script", cursive',
+      fontFamily: '"OpenDyslexic", cursive',
       fontSize: '1.25rem',
     }}
   />
 );
-
-export { default as Empty } from './Empty';

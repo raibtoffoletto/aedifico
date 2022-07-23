@@ -1,5 +1,4 @@
 import '../public/styles.css';
-import '@fontsource/bad-script/400.css';
 import '@fontsource/ibm-plex-mono/100.css';
 import '@fontsource/ibm-plex-mono/100-italic.css';
 import '@fontsource/ibm-plex-mono/200.css';
@@ -22,6 +21,10 @@ import '@fontsource/nunito/600.css';
 import '@fontsource/nunito/700.css';
 import '@fontsource/nunito/800.css';
 import '@fontsource/nunito/900.css';
+import '@fontsource/opendyslexic/400.css';
+import '@fontsource/opendyslexic/400-italic.css';
+import '@fontsource/opendyslexic/700.css';
+import '@fontsource/opendyslexic/700-italic.css';
 import '@fontsource/ubuntu/300.css';
 import '@fontsource/ubuntu/300-italic.css';
 import '@fontsource/ubuntu/400.css';
