@@ -33,10 +33,19 @@ import '@fontsource/ubuntu/500.css';
 import '@fontsource/ubuntu/500-italic.css';
 import '@fontsource/ubuntu/700.css';
 import '@fontsource/ubuntu/700-italic.css';
+import { useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '../components/theme';
 
 export default function Website({ Component, pageProps }) {
+  useEffect(() => {
+    const unusedToast = document?.getElementsByClassName?.('chakra-portal');
+
+    for (const div in unusedToast) {
+      unusedToast[div]?.remove?.();
+    }
+  }, []);
+
   return (
     <>
       <ChakraProvider theme={theme}>
