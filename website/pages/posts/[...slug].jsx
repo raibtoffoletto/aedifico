@@ -26,7 +26,10 @@ export default function Post({
   return (
     <>
       <Header {...config} page={pageTitle} />
-      <Layout {...{ menu, footer, socialMedia }} title={config?.title ?? ''}>
+      <Layout
+        {...{ menu, footer, socialMedia, path: 'posts' }}
+        title={config?.title ?? ''}
+      >
         <Heading as="h1" size="xl" align="center" mb={2}>
           {pageTitle}
         </Heading>

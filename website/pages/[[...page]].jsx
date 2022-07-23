@@ -21,6 +21,7 @@ export default function PageRoute({
   footer,
   socialMedia,
   config,
+  path,
 }) {
   const content = (
     <>
@@ -39,7 +40,10 @@ export default function PageRoute({
       {!!noLayout ? (
         content
       ) : (
-        <Layout {...{ menu, footer, socialMedia }} title={config?.title ?? ''}>
+        <Layout
+          {...{ menu, footer, socialMedia, path }}
+          title={config?.title ?? ''}
+        >
           {content}
         </Layout>
       )}
@@ -58,6 +62,10 @@ export async function getStaticProps({ params: { page } }) {
         notFound: true,
       };
     }
+
+    const path = isLandingPage
+      ? settings.initialPage.split('/')?.[0]
+      : page?.[0];
 
     if (isLandingPage && !settings?.initialPage) {
       return {
@@ -82,7 +90,7 @@ export async function getStaticProps({ params: { page } }) {
     });
 
     return {
-      props: { ...settings, pageTitle, body, noLayout: layout === false },
+      props: { ...settings, path, pageTitle, body, noLayout: layout === false },
     };
   } catch (error) {
     console.log(error); // eslint-disable-line

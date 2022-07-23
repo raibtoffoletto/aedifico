@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import {
   Flex,
   Heading,
@@ -52,7 +50,7 @@ function NavLink({ isActive, isMobile, url, external, label }) {
       };
 
   return (
-    <ListItem>
+    <ListItem role="menuitem">
       <Link
         href={`/${url}`}
         isExternal={!!external}
@@ -73,7 +71,7 @@ function NavLink({ isActive, isMobile, url, external, label }) {
 function NavList({ menu, selected, isMobile }) {
   return (
     <List
-      role="navigation"
+      role="menubar"
       sx={
         isMobile
           ? {
@@ -120,16 +118,8 @@ function DrawerToggle({ isOpen, onToggle }) {
   );
 }
 
-export default function Navigation({ title, menu, socialMedia }) {
-  const { asPath } = useRouter();
-  const [selected, setSelected] = useState(undefined);
+export default function Navigation({ title, menu, socialMedia, path }) {
   const { isOpen, onToggle } = useDisclosure();
-
-  const path = asPath.split?.('/')?.filter?.(Boolean)?.[0];
-
-  useEffect(() => {
-    setSelected(path);
-  }, [path]);
 
   return (
     <Flex
@@ -138,9 +128,10 @@ export default function Navigation({ title, menu, socialMedia }) {
       width="100%"
       as="nav"
       gap={4}
+      role="navigation"
     >
       <Flex justifyContent="space-between" width="100%" px={2}>
-        <Heading as="p" size="xl">
+        <Heading as="h1" size="xl">
           {title}
         </Heading>
         <Social links={socialMedia} />
@@ -148,10 +139,10 @@ export default function Navigation({ title, menu, socialMedia }) {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <NavList menu={menu} selected={selected} isMobile />
+        <NavList menu={menu} selected={path} isMobile />
       </Collapse>
 
-      <NavList menu={menu} selected={selected} />
+      <NavList menu={menu} selected={path} />
     </Flex>
   );
 }

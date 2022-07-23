@@ -43,7 +43,10 @@ export default function PostsPage({
   return (
     <>
       <Header {...config} page={config?.blogTitle} />
-      <Layout {...{ menu, footer, socialMedia }} title={config?.title ?? ''}>
+      <Layout
+        {...{ menu, footer, socialMedia, path: 'posts' }}
+        title={config?.title ?? ''}
+      >
         <Flex gap={4}>
           <Flex flexDirection="column" flexGrow={1}>
             <Heading as="h1" size="lg" align="center" mb={4}>
