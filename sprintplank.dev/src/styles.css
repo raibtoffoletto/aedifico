@@ -16,7 +16,7 @@ body,
   min-height: -webkit-fill-available !important;
   overflow-x: hidden;
   display: flex;
-  background-color: var(--chakra-colors-gray-100);
+  background-color: var(--chakra-colors-gray-100) !important;
 }
 
 body {
@@ -28,4 +28,5 @@ body {
 #root {
   align-items: stretch;
   justify-content: flex-start;
+  max-width: 1492px;
 }
