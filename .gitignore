@@ -24,5 +24,6 @@ yarn-error.log*
 .swc/
 out/
 build/
+certs/
 data/contents
 publish.timestamp
