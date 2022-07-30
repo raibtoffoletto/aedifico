@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: -webkit-fill-available !important;
+}
+
+body,
+#root {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  min-height: 100vh !important;
+  min-height: -webkit-fill-available !important;
+  overflow-x: hidden;
+  display: flex;
+  background-color: var(--chakra-colors-gray-100);
+}
+
+body {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#root {
+  align-items: stretch;
+  justify-content: flex-start;
+}
