@@ -1,26 +1,23 @@
-#!/usr/bin/env node
-////////////////////////////////////////////////////////////////////////
-//                                                                    //
-// Copyright (c) 2019 Raí B. Toffoletto (https://toffoletto.me)       //
-//                                                                    //
-// This program is free software; you can redistribute it and/or      //
-// modify it under the terms of the GNU General Public                //
-// License as published by the Free Software Foundation; either       //
-// version 2 of the License, or (at your option) any later version.   //
-//                                                                    //
-// This program is distributed in the hope that it will be useful,    //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of     //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  //
-// General Public License for more details.                           //
-//                                                                    //
-// You should have received a copy of the GNU General Public          //
-// License along with this program; if not, write to the              //
-// Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,   //
-// Boston, MA 02110-1301 USA                                          //
-//                                                                    //
-// Authored by: Raí B. Toffoletto <rai@toffoletto.me>                 //
-//                                                                    //
-////////////////////////////////////////////////////////////////////////
+/**
+ * Copyright 2019 ~ 2022 Raí B. Toffoletto (https://toffoletto.me)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ *
+ * Authored by: Raí B. Toffoletto <rai@toffoletto.me>
+ */
 
 const https = require('https');
 const express = require('express');
@@ -34,6 +31,17 @@ const handler = require('serve-handler');
 // const redis = require('redis');
 const getCerts = require('../aedifico/ssl');
 const { getSalt, verifyCredentials } = require('./passport');
+const api = require('./api');
+
+function sendFile(file, res) {
+  res.type(file.split('.')[1]);
+
+  const stream = createReadStream(join(__dirname, 'src', file));
+
+  stream.on('open', () => {
+    stream.pipe(res);
+  });
+}
 
 async function main() {
   try {
@@ -84,14 +92,26 @@ async function main() {
     //     });
     // });
 
-    app.use('/signOut', function (req, res) {
+    app.use('/favicon.ico', (req, res) => {
+      sendFile('favicon.ico', res);
+    });
+
+    app.use('/logo192.png', (req, res) => {
+      sendFile('logo192.png', res);
+    });
+
+    app.use('/manifest.json', (req, res) => {
+      sendFile('manifest.json', res);
+    });
+
+    app.use('/signOut', (req, res) => {
       req.session.lock = 'lock';
 
       res.writeHead(301, { Location: '/' });
       res.end();
     });
 
-    app.use('/', async function (req, res, next) {
+    app.use('/', async (req, res, next) => {
       if (req.method === 'POST') {
         if (await verifyCredentials(req.body.password)) {
           req.session.lock = 'open';
@@ -107,16 +127,13 @@ async function main() {
       if (req.session.lock === 'open') {
         next();
       } else {
-        res.type('html');
-        const login = createReadStream(join(__dirname, 'login.html'));
-
-        login.on('open', () => {
-          login.pipe(res);
-        });
+        sendFile('login.html', res);
       }
     });
 
-    app.use('/', function (req, res) {
+    app.use('/api', api);
+
+    app.use('/', (req, res) => {
       if (process.env.NODE_ENV === 'development') {
         res
           .status(200)
