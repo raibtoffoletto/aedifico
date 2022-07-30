@@ -1,6 +1,6 @@
 /*
  * Aedifico framework
- * Copyright (C) 2019 - Raí Biason Toffoletto <rai@toffoletto.me>
+ * Copyright 2019 ~ 2022 - Raí Biason Toffoletto <rai@toffoletto.me>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
