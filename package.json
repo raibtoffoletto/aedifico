@@ -1,6 +1,6 @@
 {
   "name": "aedifico",
-  "description": "Website and micro blogging engine based on markdown and git.",
+  "description": "A markdown & git based website/micro-blog engine",
   "version": "2.0.0",
   "keywords": [
     "micro-blog",

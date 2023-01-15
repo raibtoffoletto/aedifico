@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# Deploys the website contents to production.
+# ---------------------------------------------
+
+read remote_ref
+TEMP="/tmp/aedifico/"
+REPO="$PWD"
+WEBSITE="$PWD/../website/"
+TARGET="$WEBSITE/contents/"
+
+if [ -d $TEMP ]; then
+  printf "Removing temp directory\n$TEMP\n"
+  rm -R $TEMP
+fi
+
+printf "Creating a temporary directory\n$TEMP\n"
+mkdir $TEMP
+
+printf "Checking out repo\n$REPO\n"
+git --work-tree=$TEMP --git-dir=$REPO checkout -f main
+
+printf "Using temporary directory\n"
+cd $TEMP
+
+if [ -d $TARGET ]; then
+  printf "Removing target directory\n$TARGET\n"
+  rm -R $TARGET
+fi
+
+printf "Creating target directory\n$TARGET\n"
+mkdir $TARGET
+
+printf "Copying new files ...\n"
+cp -r ./* $TARGET
+
+printf "Restarting services\n"
+touch "$WEBSITE/publish.timestamp"
+
+printf "\n . . . Done!\n"
