@@ -1,11 +1,10 @@
 {
   "name": "aedifico",
-  "description": "Framework for publishing simple markdown websites.",
+  "description": "Website and micro blogging engine based on markdown and git.",
   "version": "2.0.0",
   "keywords": [
-    "webserver",
-    "website",
-    "cms"
+    "micro-blog",
+    "website"
   ],
   "homepage": "https://github.com/raibtoffoletto/aedifico",
   "author": "Raí Biason Toffoletto <rai@toffoletto.me> (https://toffoletto.me/)",
@@ -15,14 +14,8 @@
   },
   "license": "GPL-3.0",
   "private": true,
-  "scripts": {
-    "start": "node ./aedifico/main.js",
-    "sprintplank": "node ./sprintplank/main.js"
-  },
   "workspaces": [
-    "aedifico",
     "sprintplank",
-    "sprintplank.dev",
     "website"
   ]
 }

@@ -22,5 +22,5 @@
 {
   "watch": ["publish.timestamp"],
   "ext": "timestamp",
-  "exec": "PORT=5000 next dev"
+  "exec": "next build && PORT=3000 next start"
 }
