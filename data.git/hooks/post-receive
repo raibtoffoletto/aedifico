@@ -8,6 +8,7 @@ TEMP="/tmp/aedifico/"
 REPO="$PWD"
 WEBSITE="$PWD/../website/"
 TARGET="$WEBSITE/contents/"
+MEDIA="$WEBSITE/public/media"
 
 if [ -d $TEMP ]; then
   printf "Removing temp directory\n$TEMP\n"
@@ -33,6 +34,16 @@ mkdir $TARGET
 
 printf "Copying new files ...\n"
 cp -r ./* $TARGET
+
+printf "Set up static files link\n"
+cd $WEBSITE
+if [ -d $MEDIA ]; then
+  rm -R $MEDIA
+fi
+ln -s ../contents/media/ public/media
+
+printf "Build cache\n"
+yarn build:cache
 
 printf "Restarting services\n"
 touch "$WEBSITE/publish.timestamp"
