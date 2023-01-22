@@ -8,7 +8,8 @@ TEMP="/tmp/aedifico/"
 REPO="$PWD"
 WEBSITE="$PWD/../website/"
 TARGET="$WEBSITE/contents/"
-MEDIA="$WEBSITE/public/media"
+PUBLIC="$WEBSITE/public/"
+MEDIA="$PUBLIC/media"
 
 if [ -d $TEMP ]; then
   printf "Removing temp directory\n$TEMP\n"
@@ -37,6 +38,7 @@ cp -r ./* $TARGET
 
 printf "Set up static files link\n"
 cd $WEBSITE
+mkdir -p $PUBLIC
 if [ -d $MEDIA ]; then
   rm -R $MEDIA
 fi

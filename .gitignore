@@ -1,4 +1,6 @@
+.dev-clone
 !data.git
+_data
 /**/repo/
 /**/cache/
 /**/.cache/
